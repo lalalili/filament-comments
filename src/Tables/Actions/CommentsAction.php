@@ -6,6 +6,8 @@ use Filament\Actions\Action;
 use Filament\Support\Enums\Width;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\View as ViewFactory;
 use Parallax\FilamentComments\Models\FilamentComment;
 
 class CommentsAction extends Action
@@ -23,13 +25,27 @@ class CommentsAction extends Action
             ->icon(config('filament-comments.icons.action'))
             ->label(__('filament-comments::filament-comments.comments'))
             ->slideOver()
-            ->modalContentFooter(fn (Model $record): View => view('filament-comments::component', [
+            ->modalContentFooter(fn (Model $record): View => ViewFactory::make('filament-comments::component', [
                 'record' => $record,
             ]))
             ->modalHeading(__('filament-comments::filament-comments.modal.heading'))
             ->modalWidth(Width::Medium)
             ->modalSubmitAction(false)
             ->modalCancelAction(false)
-            ->visible(fn (): bool => auth()->user()->can('viewAny', config('filament-comments.comment_model')));
+            ->visible(fn (): bool => Gate::allows('viewAny', $this->getCommentModelClass()));
+    }
+
+    /**
+     * @return class-string<FilamentComment>
+     */
+    protected function getCommentModelClass(): string
+    {
+        $model = config('filament-comments.comment_model', FilamentComment::class);
+
+        if (is_string($model) && is_a($model, FilamentComment::class, true)) {
+            return $model;
+        }
+
+        return FilamentComment::class;
     }
 }

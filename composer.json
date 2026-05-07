@@ -25,9 +25,23 @@
         "spatie/laravel-package-tools": "^1.15.0",
         "illuminate/contracts": "^10.0 | ^11.0 | ^12.0 | ^13.0"
     },
+    "require-dev": {
+        "orchestra/testbench": "^9.0|^10.0|^11.0",
+        "pestphp/pest": "^3.0|^4.0",
+        "pestphp/pest-plugin-laravel": "^3.0|^4.0",
+        "pestphp/pest-plugin-livewire": "^3.0|^4.0",
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.0",
+        "phpstan/phpstan": "^2.1"
+    },
     "autoload": {
         "psr-4": {
             "Parallax\\FilamentComments\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Parallax\\FilamentComments\\Tests\\": "tests/"
         }
     },
     "extra": {
@@ -37,6 +51,17 @@
             ]
         }
     },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "scripts": {
+        "test": "pest",
+        "analyse": "phpstan analyse --configuration=phpstan.neon.dist --no-progress",
+        "format": "pint"
+    }
 }

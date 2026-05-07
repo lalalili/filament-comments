@@ -29,7 +29,7 @@ class FilamentCommentPolicy
 
     public function delete(Authenticatable $user, FilamentComment $filamentComment): bool
     {
-        return $user->id === $filamentComment->user_id;
+        return $user->getAuthIdentifier() === $filamentComment->user_id;
     }
 
     public function deleteAny(Authenticatable $user): bool
